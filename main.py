@@ -36,34 +36,40 @@ def draw_plot(points: List[Tuple[int, int]]):
 
 def interactive_mode():
     points: List[Tuple[int, int]] = []
-    last_point: Optional[Tuple[int, int]] = None
+
     while True:
         print('>', end=' ')
         args = [a.strip() for a in input().split()]
+        if len(args) == 0:
+            continue
         command = args[0]
         args = args[1:]
 
         if command in ('a', 'add', 'append'):
             try:
                 p_to_add = (int(args[0]), int(args[1]))
-                last_point = p_to_add
+                if p_to_add[0] > 100 or p_to_add[1] > 100:
+                    print("Too large number")
+                    continue
                 points.append(p_to_add)
-            except ValueError:
-                print('Format: x, y (e.g. "1, 2")')
+            except:
+                print('Format: x y (e.g. "1 2")')
                 continue
         elif command in ('d', 'del', 'delete'):
-            if len(args) == 0:
-                points.remove(last_point)
+            if len(points) == 0:
+                print("There are no points")
+            elif len(args) == 0:
+                del points[-1]
             else:
                 try:
                     p_to_delete = (int(args[0]), int(args[1]))
                     points.remove(p_to_delete)
-                except ValueError:
-                    print('Format: x, y (e.g. "1, 2")')
+                except:
+                    print('Format: x y (e.g. "1 2")')
                     continue
         elif command in ('?', 'h', 'help'):
-            print("a|add 1, 5  --  Adds a point to the plot")
-            print("d|del 3, 7  --  Remove a point from the plot")
+            print("a|add 1 5  --  Adds a point to the plot")
+            print("d|del 3 7  --  Removes a point from the plot")
             continue
         elif command in ('exit', 'quit', 'x', 'q', 'done', ''):
             return
